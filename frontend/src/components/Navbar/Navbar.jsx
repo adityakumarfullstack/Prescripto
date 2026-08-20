@@ -1,6 +1,6 @@
 import './navbar.css'
 import { assets } from '../../assets/assets'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
@@ -20,7 +20,7 @@ const Navbar = () => {
         <nav className="navbar py-4 border-b border-gray-400 text-sm">
             <div className="container">
                 <div className='flex justify-between items-center'>
-                    <div className="navbar-brand">
+                    <div className="navbar-brand max-w-[200px]">
                         <img src={assets.logo} alt="logo" />
                     </div>
                     <div className="navbar-menu hidden md:flex">
@@ -57,16 +57,16 @@ const Navbar = () => {
                                     <img className="w-10 h-10 rounded-full" src={assets.profile_pic} alt="profile picture" />
                                     <img className="w-2.5 h-2.5" src={assets.dropdown_icon} alt="dropdown icon" />
                                     <div className="absolute top-10 right-0 bg-white border border-gray-200 shadow-md px-4 py-2 rounded-md hidden group-hover:block">
-                                        <ul className="font-medium">
+                                        <ul className="font-medium w-max">
                                             <li className="py-1">
-                                                <NavLink to="/profile" className={navLinkStyles}>
+                                                <Link to="/my-profile" className="hover:text-primary transition-all duration-300">
                                                     My Profile
-                                                </NavLink>
+                                                </Link>
                                             </li>
                                             <li className="py-1">
-                                                <NavLink to="/appointments" className={navLinkStyles}>
+                                                <Link to="/my-appointments" className="hover:text-primary transition-all duration-300">
                                                     My Appointments
-                                                </NavLink>
+                                                </Link>
                                             </li>
                                             <li className="py-1">
                                                 <button onClick={() => setToken(false)} className="hover:text-primary transition-all duration-300">Logout</button>

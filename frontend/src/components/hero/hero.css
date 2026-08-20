@@ -1,0 +1,8 @@
+.btn-book img {
+    transition: all .2s ease-in;
+}
+
+.btn-book:hover img {
+    transform: rotate(-45deg);
+    transform-origin: center center;
+}
