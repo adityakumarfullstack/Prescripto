@@ -5,9 +5,9 @@ import { assets } from "../../assets/assets"
 const Hero = () => {
     return (
         <div className="hero flex flex-col md:flex-row gap-5 bg-primary rounded-lg px-6 md:px-10 lg:px-20 mt-4 text-white text-center md:text-left">
-            <div className="hero-left md:w-1/2 pt-20 pb-0 md:py-20">
+            <div className="hero-left md:w-1/2 pt-20 pb-0 md:py-20 lg:py-32">
                 <div className="hero-title mb-5">
-                    <h1 className="text-3xl md:text-4xl font-semibold">Book Appointment<br /> With Trusted Doctors</h1>
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold">Book Appointment<br /> With Trusted Doctors</h1>
                 </div>
                 <div className="hero-description-container flex gap-2 flex-col md:flex-row items-center mb-5">
                     <div className="img-parent">
@@ -28,7 +28,7 @@ const Hero = () => {
                     </a>
                 </div>
             </div>
-            <div className="hero-right md:w-1/2 relative">
+            <div className="hero-right md:w-1/2 relative ">
                 <div className="hero-image md:absolute md:bottom-0 md:right-0">
                     <img src={assets.header_img} className="w-full" alt="hero_image" />
                 </div>

@@ -20,8 +20,8 @@ const Navbar = () => {
         <nav className="navbar py-4 border-b border-gray-400 text-sm">
             <div className="container">
                 <div className='flex justify-between items-center'>
-                    <div className="navbar-brand max-w-[200px]">
-                        <img src={assets.logo} alt="logo" />
+                    <div className="navbar-brand max-w-[150px] lg:max-w-[200px]">
+                        <img src={assets.logo} alt="logo" onClick={() => navigate('/')} />
                     </div>
                     <div className="navbar-menu hidden md:flex">
                         <ul className="flex items-center gap-5 font-medium uppercase">
