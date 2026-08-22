@@ -15,7 +15,7 @@ const TopDoctors = () => {
             <div className="top-doctors-list grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-5 items-center">
                 {
                     doctors.slice(0, 8).map((item, index) => (
-                        <div className="top-doctors-item border border-gray-300 rounded-lg hover:border-primary hover:translate-y-[-3px] hover:shadow-lg transition ease-in-out duration-400 cursor-pointer" key={index} onClick={() => navigate(`/doctors/${item._id}`)}>
+                        <div className="top-doctors-item border border-gray-300 rounded-lg hover:border-primary hover:translate-y-[-3px] hover:shadow-lg transition ease-in-out duration-400 cursor-pointer" key={index} onClick={() => { navigate(`/appointment/${item._id}`); scrollTo(0, 0) }}>
                             <div className="img-parent mb-4 bg-primary/10">
                                 <img src={item.image} alt="top-doctors" />
                             </div>

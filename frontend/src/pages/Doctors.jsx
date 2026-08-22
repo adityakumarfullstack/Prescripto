@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { useParams } from "react-router-dom"
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 const Doctors = () => {
     const { speciality } = useParams();
     const { doctors } = useContext(AppContext)
-    const [filterDoc, setFilterDoc] = useState([]);
+    /* const [filterDoc, setFilterDoc] = useState([]);
     const applyFilterDoc = () => {
         if (speciality) {
             setFilterDoc(doctors.filter((item) => item.speciality === speciality));
@@ -17,11 +17,16 @@ const Doctors = () => {
         }
     }
 
-    const navigate = useNavigate();
-
     useEffect(() => {
         applyFilterDoc();
-    }, [speciality, doctors])
+    }, [speciality, doctors]) */
+
+    const navigate = useNavigate();
+
+    // Better Approach
+    const filterDoc = speciality
+        ? doctors.filter(item => item.speciality === speciality)
+        : doctors;
 
     return (
         <section className="all-doctors-page pt-10 md:pt-15">
@@ -29,33 +34,33 @@ const Doctors = () => {
                 <div className="section-header text-center">
                     <h2 className="title text-2xl font-medium mb-3">Browse through the doctors specialist.</h2>
                 </div>
-                <div className="all-doctors-list-wrapper mt-5 flex flex-col md:flex-row gap-5">
+                <div className="all-doctors-list-wrapper mt-5 flex flex-row gap-3 sm:gap-5">
                     <div className="all-doctors-list-tabs">
                         <ul className="flex flex-col gap-3 text-gray-600">
-                            <li className={`px-4 py-2 border border-gray-600 rounded-sm cursor-pointer hover:text-black hover:border-primary hover:bg-primary/10 transition-all duration-300 ease-in-out ${speciality==="General physician"? "text-black border-primary bg-primary/10":""}`} onClick={()=> speciality==="General physician"?navigate('/doctors'):navigate('/doctors/General physician')}>
+                            <li className={`px-2 py-1 sm:px-4 sm:py-2  border border-gray-600 rounded-sm cursor-pointer hover:text-black hover:border-primary hover:bg-primary/10 transition-all duration-300 ease-in-out ${speciality === "General physician" ? "text-black border-primary bg-primary/10" : ""}`} onClick={() => speciality === "General physician" ? navigate('/doctors') : navigate('/doctors/General physician')}>
                                 <p>General physician</p>
                             </li>
-                            <li className={`px-4 py-2 border border-gray-600 rounded-sm cursor-pointer hover:text-black hover:border-primary hover:bg-primary/10 transition-all duration-300 ease-in-out ${speciality==="Gynecologist"? "text-black border-primary bg-primary/10":""}`} onClick={()=> speciality==="Gynecologist"?navigate('/doctors'):navigate('/doctors/Gynecologist')}>
+                            <li className={`px-2 py-1 sm:px-4 sm:py-2  border border-gray-600 rounded-sm cursor-pointer hover:text-black hover:border-primary hover:bg-primary/10 transition-all duration-300 ease-in-out ${speciality === "Gynecologist" ? "text-black border-primary bg-primary/10" : ""}`} onClick={() => speciality === "Gynecologist" ? navigate('/doctors') : navigate('/doctors/Gynecologist')}>
                                 <p>Gynecologist</p>
                             </li>
-                            <li className={`px-4 py-2 border border-gray-600 rounded-sm cursor-pointer hover:text-black hover:border-primary hover:bg-primary/10 transition-all duration-300 ease-in-out ${speciality==="Dermatologist"? "text-black border-primary bg-primary/10":""}`} onClick={()=> speciality==="Dermatologist"?navigate('/doctors'):navigate('/doctors/Dermatologist')}>
+                            <li className={`px-2 py-1 sm:px-4 sm:py-2  border border-gray-600 rounded-sm cursor-pointer hover:text-black hover:border-primary hover:bg-primary/10 transition-all duration-300 ease-in-out ${speciality === "Dermatologist" ? "text-black border-primary bg-primary/10" : ""}`} onClick={() => speciality === "Dermatologist" ? navigate('/doctors') : navigate('/doctors/Dermatologist')}>
                                 <p>Dermatologist</p>
                             </li>
-                            <li className={`px-4 py-2 border border-gray-600 rounded-sm cursor-pointer hover:text-black hover:border-primary hover:bg-primary/10 transition-all duration-300 ease-in-out ${speciality==="Pediatricians"? "text-black border-primary bg-primary/10":""}`} onClick={()=> speciality==="Pediatricians"?navigate('/doctors'):navigate('/doctors/Pediatricians')}>
+                            <li className={`px-2 py-1 sm:px-4 sm:py-2  border border-gray-600 rounded-sm cursor-pointer hover:text-black hover:border-primary hover:bg-primary/10 transition-all duration-300 ease-in-out ${speciality === "Pediatricians" ? "text-black border-primary bg-primary/10" : ""}`} onClick={() => speciality === "Pediatricians" ? navigate('/doctors') : navigate('/doctors/Pediatricians')}>
                                 <p>Pediatricians</p>
                             </li>
-                            <li className={`px-4 py-2 border border-gray-600 rounded-sm cursor-pointer hover:text-black hover:border-primary hover:bg-primary/10 transition-all duration-300 ease-in-out ${speciality==="Neurologist"? "text-black border-primary bg-primary/10":""}`} onClick={()=> speciality==="Neurologist"?navigate('/doctors'):navigate('/doctors/Neurologist')}>
+                            <li className={`px-2 py-1 sm:px-4 sm:py-2  border border-gray-600 rounded-sm cursor-pointer hover:text-black hover:border-primary hover:bg-primary/10 transition-all duration-300 ease-in-out ${speciality === "Neurologist" ? "text-black border-primary bg-primary/10" : ""}`} onClick={() => speciality === "Neurologist" ? navigate('/doctors') : navigate('/doctors/Neurologist')}>
                                 <p>Neurologist</p>
                             </li>
-                            <li className={`px-4 py-2 border border-gray-600 rounded-sm cursor-pointer hover:text-black hover:border-primary hover:bg-primary/10 transition-all duration-300 ease-in-out ${speciality==="Gastroenterologist"? "text-black border-primary bg-primary/10":""}`} onClick={()=> speciality==="Gastroenterologis"?navigate('/doctors'):navigate('/doctors/Gastroenterologist')}>
+                            <li className={`px-2 py-1 sm:px-4 sm:py-2  border border-gray-600 rounded-sm cursor-pointer hover:text-black hover:border-primary hover:bg-primary/10 transition-all duration-300 ease-in-out ${speciality === "Gastroenterologist" ? "text-black border-primary bg-primary/10" : ""}`} onClick={() => speciality === "Gastroenterologis" ? navigate('/doctors') : navigate('/doctors/Gastroenterologist')}>
                                 <p>Gastroenterologist</p>
                             </li>
                         </ul>
                     </div>
-                    <div className="all-doctors-list grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-5">
+                    <div className="all-doctors-list grid sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-5">
                         {
                             filterDoc.map((item, index) => (
-                                <div className="top-doctors-item border border-gray-300 rounded-lg hover:border-primary hover:translate-y-[-3px] hover:shadow-lg transition ease-in-out duration-400 cursor-pointer text-center" key={index} onClick={() => navigate(`/doctors/${item._id}`)}>
+                                <div className="top-doctors-item border border-gray-300 rounded-lg hover:border-primary hover:translate-y-[-3px] hover:shadow-lg transition ease-in-out duration-400 cursor-pointer text-center" key={index} onClick={() => navigate(`/appointment/${item._id}`)}>
                                     <div className="img-parent mb-4 bg-primary/10">
                                         <img src={item.image} alt="top-doctors" />
                                     </div>
