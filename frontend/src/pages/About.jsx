@@ -10,16 +10,16 @@ const About = () => {
                         <h2 className="page-title text-3xl text-center md:text-4xl uppercase">About <span className="font-semibold">Us</span></h2>
                     </div>
                     <div className="page-content flex flex-col md:flex-row gap-5">
-                        <div className="page-left md:w-1/2">
+                        <div className="page-left md:w-1/2 lg:w-1/3">
                             <div className="img-parent">
-                                <img src={assets.about_image} alt="About Image" className="w-full mx-auto" />
+                                <img src={assets.about_image} alt="About Image" className="xl:aspect-3/2 xl:object-cover xl:object-top" />
                             </div>
                         </div>
-                        <div className="page-right md:w-1/2">
+                        <div className="page-right md:w-1/2 lg:w-2/3">
                             <div className="page-description">
                                 <p className="mb-3">Welcome to Prescripto, your trusted partner in managing your healthcare needs conveniently and efficiently. At Prescripto, we understand the challenges individuals face when it comes to scheduling doctor appointments and managing their health records.</p>
                                 <p className="mb-3">Prescripto is committed to excellence in healthcare technology. We continuously strive to enhance our platform, integrating the latest advancements to improve user experience and deliver superior service. Whether you're booking your first appointment or managing ongoing care, Prescripto is here to support you every step of the way.</p>
-                                <h5 className="font-semibold mb-3">Our Vision</h5>
+                                <h5 className="font-semibold mb-1">Our Vision</h5>
                                 <p>Our vision at Prescripto is to create a seamless healthcare experience for every user. We aim to bridge the gap between patients and healthcare providers, making it easier for you to access the care you need, when you need it.</p>
                             </div>
                         </div>
@@ -29,7 +29,7 @@ const About = () => {
             <section className="why-us-section pt-10">
                 <div className="container">
                     <div className="section-header mb-5">
-                        <h2 className="page-title text-3xl uppercase">Why <span className="font-semibold">Choose Us</span></h2>
+                        <h2 className="page-title text-center text-3xl uppercase">Why <span className="font-semibold">Choose Us</span></h2>
                     </div>
                     <div className="why-us-list flex flex-col md:flex-row gap-0">
                         <div className="why-us-item flex items-center p-5 md:p-10 border border-gray-300 hover:border-primary hover:bg-primary hover:text-white transition ease-in-out duration-400">

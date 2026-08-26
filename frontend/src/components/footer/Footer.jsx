@@ -47,8 +47,8 @@ export const Footer = () => {
                                     <a href="tel:+0000000000">+0-000-000-000</a>
                                 </li>
                                 <li>
-                                    <a href="mailto:prescripto@gmail.com">
-                                        prescripto@gmail.com
+                                    <a href="mailto:prescripto@example.com">
+                                        prescripto@example.com
                                     </a>
                                 </li>
                             </ul>
