@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useParams } from "react-router-dom"
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 
 const Doctors = () => {
+    const [showFilterMenu, setShowFilterMenu] = useState(false);
     const { speciality } = useParams();
     const { doctors } = useContext(AppContext)
     /* const [filterDoc, setFilterDoc] = useState([]);
@@ -34,8 +35,11 @@ const Doctors = () => {
                 <div className="section-header text-center">
                     <h2 className="title text-2xl font-medium mb-3">Browse through the doctors specialist.</h2>
                 </div>
-                <div className="all-doctors-list-wrapper mt-5 flex flex-row gap-3 sm:gap-5">
-                    <div className="all-doctors-list-tabs">
+                <div className="all-doctors-list-wrapper mt-5 flex flex-col sm:flex-row gap-3 sm:gap-5">
+                    <div className="filter-btn-parent w-full sm:hidden">
+                        <button className="filter-btn bg-primary text-white py-2 px-8 rounded-md hover:bg-primary/80 transition-all duration-300 ease-in-out" onClick={() => setShowFilterMenu(!showFilterMenu)}>Filter</button>
+                    </div>
+                    <div className={`all-doctors-list-tabs text-center sm:text-left ${showFilterMenu ? "block" : "hidden"} sm:block`}>
                         <ul className="flex flex-col gap-3 text-gray-600">
                             <li className={`px-2 py-1 sm:px-4 sm:py-2  border border-gray-600 rounded-sm cursor-pointer hover:text-black hover:border-primary hover:bg-primary/10 transition-all duration-300 ease-in-out ${speciality === "General physician" ? "text-black border-primary bg-primary/10" : ""}`} onClick={() => speciality === "General physician" ? navigate('/doctors') : navigate('/doctors/General physician')}>
                                 <p>General physician</p>

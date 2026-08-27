@@ -14,7 +14,7 @@ const Contact = () => {
                                 <img src={assets.contact_image} alt="Contact Image" />
                             </div>
                         </div>
-                        <div className="contact-info-right  md:w-1/2">
+                        <div className="contact-info-right text-center md:text-left  md:w-1/2">
                             <div className="contact-info-item mb-3">
                                 <h5 className="text-xl font-semibold mb-2">Our Address</h5>
                                 <p className="">123 Main Street, City, Country</p>

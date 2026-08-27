@@ -1,6 +1,5 @@
 import { useContext } from "react"
 import { AppContext } from "../context/AppContext"
-import { assets } from "../assets/assets";
 
 const MyAppointments = () => {
     const { doctors } = useContext(AppContext);
@@ -9,7 +8,7 @@ const MyAppointments = () => {
             <section className="my-appointments-section">
                 <div className="container">
                     <div className="section-header mb-5">
-                        <h2 className="page-title text-3xl text-center md:text-4xl uppercase">My <span className="font-semibold">Appointments</span></h2>
+                        <h2 className="page-title text-2xl md:text-3xl text-center md:text-4xl uppercase">My <span className="font-semibold">Appointments</span></h2>
                     </div>
                     <div className="my-appointments-wrapper flex flex-col gap-5">
                         {

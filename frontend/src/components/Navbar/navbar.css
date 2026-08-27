@@ -19,3 +19,7 @@
 .navbar-menu li a.active::after {
     width: 100%;
 }
+
+.mobile-menu li a.active {
+    color: var(--primary-color);
+}

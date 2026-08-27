@@ -21,16 +21,16 @@ const MyProfile = () => {
             <section className="my-profile-section max-w-[600px] mx-auto">
                 <div className="container">
                     <div className="section-header mb-5">
-                        <h2 className="page-title text-3xl text-center md:text-4xl uppercase">My <span className="font-semibold">Profile</span></h2>
+                        <h2 className="page-title text-2xl md:text-3xl text-center md:text-4xl uppercase">My <span className="font-semibold">Profile</span></h2>
                     </div>
                     <div className="my-profile flex flex-col md:flex-row gap-3">
                         <div className="my-profile-left md:w-1/2">
                             <div className="img-parent">
-                                <img src={userData.image} alt="Profile Image" />
+                                <img src={userData.image} alt="Profile Image" className="mx-auto" />
                             </div>
                         </div>
                         <div className="my-profile-right md:w-1/2">
-                            <div className="my-profile-details text-[15px]">
+                            <div className="my-profile-details text-[15px] text-center md:text-left">
                                 <div className="username-parent mb-2">
                                     <h5 className="text-xl font-semibold">Name</h5>
                                     {
