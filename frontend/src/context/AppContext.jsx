@@ -1,7 +1,7 @@
 import { createContext } from "react";
 import { doctors } from "../assets/assets";
 
-export const AppContext = createContext();
+const AppContext = createContext();
 
 const AppContextProvider = ({ children }) => {
     const currSymbol = "$";
@@ -19,3 +19,4 @@ const AppContextProvider = ({ children }) => {
 }
 
 export default AppContextProvider
+export { AppContext }
