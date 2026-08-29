@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import cors from 'cors'
 import 'dotenv/config'
 import connectDB from './config/mongodb.js'
+import connectCloudinary from './config/cloduinary.js'
 
 //app config
 const app = express()
@@ -10,6 +11,9 @@ const port = process.env.PORT || 9000
 
 //database connection
 connectDB()
+
+//cloudinary connection
+connectCloudinary()
 
 //middlewares
 app.use(express.json())
