@@ -1,1 +1,18 @@
 @import "tailwindcss";
+
+@theme {
+    --color-primary: #5f6fff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+
+.container {
+    @apply container mx-auto;
+}
+
+.form-group {
+    @apply flex flex-col gap-2 w-full;
+}
