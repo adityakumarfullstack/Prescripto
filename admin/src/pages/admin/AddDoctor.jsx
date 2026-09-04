@@ -76,7 +76,7 @@ const AddDoctor = () => {
                                 <textarea name="doctor-about" id="doctor-about" rows="5" placeholder="Enter Doctor About" required></textarea>
                             </div>
                             <div className="form-group md:col-span-2">
-                                <button type="submit" className="btn btn-primary">Add Doctor</button>
+                                <button type="submit" className="btn btn-primary bg-primary text-white py-3 px-4 text-sm font-semibold rounded-lg border-blue-600 hover:bg-primary/90 transition ease-in-out duration-200">Add Doctor</button>
                             </div>
                         </form>
                     </div>
