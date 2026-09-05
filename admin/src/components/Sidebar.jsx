@@ -7,7 +7,7 @@ import { assets } from '../assets/assets';
 const Sidebar = () => {
     const { aToken } = useContext(AdminContext);
     return (
-        <aside className="sidebar-wrapper h-screen bg-white border-r border-gray-200 p-2 min-w-[250px]">
+        <aside className="sidebar-wrapper min-h-screen bg-white border-r border-gray-200 p-2 min-w-[250px]">
             {
                 aToken &&
                 <div className="sidebar">
