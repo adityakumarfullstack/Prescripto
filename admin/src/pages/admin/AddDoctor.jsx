@@ -41,9 +41,9 @@ const AddDoctor = () => {
             formData.append('doctorAddress', JSON.stringify({ line1: doctorAddress1, line2: doctorAddress2 }));
             formData.append('doctorAbout', doctorAbout);
 
-            formData.forEach((value, key) => {
+            /* formData.forEach((value, key) => {
                 console.log(`${key}: ${value}`);
-            });
+            }); */
 
             const { data } = await axios.post(`${backendUrl}/api/admin/add-doctor`, formData, { headers: { aToken } })
 
