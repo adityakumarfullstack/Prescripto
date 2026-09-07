@@ -32,9 +32,9 @@ const Sidebar = () => {
                                 </NavLink>
                             </li>
                             <li className="sidebar-item">
-                                <NavLink to="/doctor-list" className={({ isActive }) => `sidebar-link flex items-center gap-2 py-2 px-5 md:px-8 md:py-3 cursor-pointer ${isActive ? 'bg-[#F2F3FF] border-r-4 border-primary' : ''}`}>
+                                <NavLink to="/all-doctors" className={({ isActive }) => `sidebar-link flex items-center gap-2 py-2 px-5 md:px-8 md:py-3 cursor-pointer ${isActive ? 'bg-[#F2F3FF] border-r-4 border-primary' : ''}`}>
                                     <span><img src={assets.people_icon} alt="" /></span>
-                                    Doctors
+                                    All Doctors
                                 </NavLink>
                             </li>
                         </ul>
