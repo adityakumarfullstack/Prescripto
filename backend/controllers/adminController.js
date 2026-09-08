@@ -5,75 +5,102 @@ import DoctorModel from "../models/Doctor.js"
 import jwt from "jsonwebtoken" 
 
 //API for Adding Doctors
+
 const addDoctor = async (req, res) => {
     try {
-        const { name, email, password, speciality, degree, image, experience, about, fees, address } = req.body
-        const imageFile = req.file
-        
-        // console.log({name, email, password, speciality, degree, experience, about, fees, address,imageFile})
+        const {
+            doctorName,
+            doctorEmail,
+            doctorPassword,
+            doctorExperience,
+            doctorSpeciality,
+            doctorQualification,
+            doctorFee,
+            doctorAddress,
+            doctorAbout
+        } = req.body;
+
+        const imageFile = req.file;
 
         //validation
-        if(!name || !email || !password || !speciality || !degree || !experience || !about || !fees || !address || !imageFile){
+        if (
+            !doctorName ||
+            !doctorEmail ||
+            !doctorPassword ||
+            !doctorExperience ||
+            !doctorSpeciality ||
+            !doctorQualification ||
+            !doctorFee ||
+            !doctorAddress ||
+            !doctorAbout ||
+            !imageFile
+        ) {
             return res.status(400).json({
                 success: false,
                 message: "Please fill all the fields",
-            })
+            });
         }
-        
+
         //validate email
-        if(!validator.isEmail(email)){
+        if (!validator.isEmail(doctorEmail)) {
             return res.status(400).json({
                 success: false,
                 message: "Please enter a valid email",
-            })
+            });
         }
-        
+
         //validate strong password
-        if(password.length < 8){
+        if (doctorPassword.length < 8) {
             return res.status(400).json({
                 success: false,
                 message: "Password must be at least 8 characters",
-            })
+            });
         }
 
         //hash password
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(password, salt)
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(doctorPassword, salt);
 
         //upload image on cloudinary
-        const uploadImage = await cloudinary.uploader.upload(imageFile.path,{resource_type:"image"})
-        const imageUrl = uploadImage.secure_url
+        const uploadImage = await cloudinary.uploader.upload(
+            imageFile.path,
+            { resource_type: "image" }
+        );
+        const imageUrl = uploadImage.secure_url;
 
         //create doctor
         const doctorData = {
-            name,
-            email,
+            name: doctorName,
+            email: doctorEmail,
             password: hashedPassword,
-            speciality,
-            degree,
-            experience,
-            about,
-            fees,
-            address: JSON.parse(address),
+            speciality: doctorSpeciality,
+            degree: doctorQualification,
+            experience: doctorExperience,
+            about: doctorAbout,
+            fees: doctorFee,
+            address: JSON.parse(doctorAddress),
             image: imageUrl,
             date: Date.now(),
-        }
+        };
 
-        const newDoctor = new DoctorModel(doctorData)
-        await newDoctor.save()
+        const newDoctor = new DoctorModel(doctorData);
+
+        await newDoctor.save();
+
         return res.status(201).json({
             success: true,
             message: "Doctor added successfully",
-        })
-        
+        });
+
     } catch (error) {
         console.log(error);
+
         return res.status(500).json({
             success: false,
             message: `Error: ${error.message}`,
-        })
+        });
     }
-}
+};
 
 
 //API for Admin Login
@@ -103,4 +130,21 @@ const loginAdmin=(req,res)=>{
     }
 }
 
-export {addDoctor,loginAdmin}
+//API to get all doctors for admin
+const allDoctors=async(req,res)=>{
+    try {
+        const doctors=await DoctorModel.find({}).select("-password") //select all fields except password
+        return res.status(200).json({
+            success: true,
+            message: "Doctors fetched successfully",
+            doctors,
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Error: ${error.message}`,
+        })
+    }
+}
+
+export {addDoctor,loginAdmin,allDoctors}
