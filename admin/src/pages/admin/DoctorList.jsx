@@ -3,7 +3,7 @@ import { AdminContext } from '../../context/AdminContext'
 import { useEffect } from 'react'
 
 const DoctorList = () => {
-    const { doctors, getAllDoctors, aToken } = useContext(AdminContext)
+    const { doctors, getAllDoctors, aToken, changeAvailability } = useContext(AdminContext)
 
     useEffect(() => {
         if (aToken) {
@@ -24,8 +24,8 @@ const DoctorList = () => {
                                     <img src={item.image} alt="top-doctors" />
                                 </div>
                                 <div className="availability mb-2">
-                                    <p className="w-max mx-auto px-3 rounded-full border flex items-center gap-1 bg-blue-100 text-blue-600">
-                                        <input type="checkbox" name="" checked={item.available} className='' />
+                                    <p className={`w-max mx-auto px-3 rounded-full border flex items-center gap-1 ${item.availability ? 'bg-green-600/10 border-green-600 text-green-600' : 'bg-red-600/10 border-red-600 text-red-600'}`}>
+                                        <input type="checkbox" onChange={() => changeAvailability(item._id)} checked={item.availability} className='accent-green-600' />
                                         Available
                                     </p>
                                 </div>
