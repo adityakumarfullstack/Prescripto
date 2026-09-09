@@ -30,4 +30,20 @@ const changeAvailability = async (req, res) => {
     }
 };
 
-export {changeAvailability}
+const doctorList = async (req, res) => {
+    try {
+        const doctors = await DoctorModel.find({}).select(["-password",'-email']) //select all fields except password and email
+        return res.status(200).json({
+            success: true,
+            message: "Doctors fetched successfully",
+            doctors,
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Error: ${error.message}`,
+        })
+    }
+}
+
+export {changeAvailability,doctorList}
