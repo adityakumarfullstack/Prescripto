@@ -30,7 +30,7 @@ const Doctors = () => {
         : doctors;
 
     return (
-        <section className="all-doctors-page pt-10 md:pt-15">
+        <section className="all-doctors-page py-10 md:py-15">
             <div className="container">
                 <div className="section-header text-center">
                     <h2 className="title text-2xl font-medium mb-3">Browse through the doctors specialist.</h2>
@@ -50,8 +50,8 @@ const Doctors = () => {
                             <li className={`px-2 py-1 sm:px-4 sm:py-2  border border-gray-600 rounded-sm cursor-pointer hover:text-black hover:border-primary hover:bg-primary/10 transition-all duration-300 ease-in-out ${speciality === "Dermatologist" ? "text-black border-primary bg-primary/10" : ""}`} onClick={() => speciality === "Dermatologist" ? navigate('/doctors') : navigate('/doctors/Dermatologist')}>
                                 <p>Dermatologist</p>
                             </li>
-                            <li className={`px-2 py-1 sm:px-4 sm:py-2  border border-gray-600 rounded-sm cursor-pointer hover:text-black hover:border-primary hover:bg-primary/10 transition-all duration-300 ease-in-out ${speciality === "Pediatricians" ? "text-black border-primary bg-primary/10" : ""}`} onClick={() => speciality === "Pediatricians" ? navigate('/doctors') : navigate('/doctors/Pediatricians')}>
-                                <p>Pediatricians</p>
+                            <li className={`px-2 py-1 sm:px-4 sm:py-2  border border-gray-600 rounded-sm cursor-pointer hover:text-black hover:border-primary hover:bg-primary/10 transition-all duration-300 ease-in-out ${speciality === "Pediatrician" ? "text-black border-primary bg-primary/10" : ""}`} onClick={() => speciality === "Pediatrician" ? navigate('/doctors') : navigate('/doctors/Pediatrician')}>
+                                <p>Pediatrician</p>
                             </li>
                             <li className={`px-2 py-1 sm:px-4 sm:py-2  border border-gray-600 rounded-sm cursor-pointer hover:text-black hover:border-primary hover:bg-primary/10 transition-all duration-300 ease-in-out ${speciality === "Neurologist" ? "text-black border-primary bg-primary/10" : ""}`} onClick={() => speciality === "Neurologist" ? navigate('/doctors') : navigate('/doctors/Neurologist')}>
                                 <p>Neurologist</p>
