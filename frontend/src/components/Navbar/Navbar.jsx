@@ -2,7 +2,8 @@ import './navbar.css'
 import { assets } from '../../assets/assets'
 import { Link, NavLink } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import { AppContext } from '../../context/AppContext'
 
 const Navbar = () => {
     const navLinkStyles = ({ isActive }) =>
@@ -14,8 +15,13 @@ const Navbar = () => {
     const navigate = useNavigate();
 
     const [showMenu, setShowMenu] = useState(false);
-    const [token, setToken] = useState(true);
     const [showProfileMenu, setShowProfileMenu] = useState(false);
+
+    const { token, setToken } = useContext(AppContext);
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        setToken(false);
+    }
 
     return (
         <nav className="navbar py-4 border-b border-gray-400 text-sm">
@@ -73,7 +79,7 @@ const Navbar = () => {
                                                     </Link>
                                                 </li>
                                                 <li className="py-1">
-                                                    <button onClick={() => setToken(false)} className="hover:text-primary transition-all duration-300">Logout</button>
+                                                    <button onClick={handleLogout} className="hover:text-primary transition-all duration-300">Logout</button>
                                                 </li>
                                             </ul>
                                         </div>

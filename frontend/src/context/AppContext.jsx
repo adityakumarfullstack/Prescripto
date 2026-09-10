@@ -11,11 +11,6 @@ const AppContextProvider = ({ children }) => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const [doctors, setDoctors] = useState([])
 
-    const value = {
-        doctors,
-        currSymbol,
-    }
-
     const getAllDoctors = async () => {
         try {
             const { data } = await axios.get(`${backendUrl}/api/doctor/list`); //Here we don't need aToken as it is a public route
@@ -35,6 +30,17 @@ const AppContextProvider = ({ children }) => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         getAllDoctors();
     }, [])
+
+    //UserLogin
+    const [token, setToken] = useState('')
+
+    const value = {
+        doctors,
+        currSymbol,
+        token,
+        setToken,
+        backendUrl
+    }
 
     return (
         <AppContext.Provider value={value}>
