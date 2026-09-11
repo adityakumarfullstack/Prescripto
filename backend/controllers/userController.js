@@ -3,6 +3,7 @@ import validator from "validator";
 import bcrypt from "bcrypt";
 import UserModel from "../models/User.js";
 import jwt from "jsonwebtoken"
+import cloudinary from "cloudinary"
 
 
 //API to register a new user
@@ -113,4 +114,64 @@ const loginUser = async (req, res) => {
     }
 }
 
-export { registerUser, loginUser}
+//API to get user profile data
+const getProfile= async(req,res)=>{
+    try {
+        const {userId} = req.body
+        const userData = await UserModel.findById(userId).select("-password")
+        return res.status(200).json({
+            success: true,
+            message: "User profile data fetched successfully",
+            userData
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            success: false,
+            message: `Error: ${error.message}`,
+        })
+    }
+}
+
+//API to update user profile data
+const updateProfile= async(req,res)=>{
+    try {
+        const { userId, name, phone, address, dob, gender } = req.body
+        const imageFile=req.file
+        if (!name || !phone || !address || !dob || !gender) {
+            return res.status(400).json({
+                success: false,
+                message: "Data missing",
+            })
+        }
+        await userModel.findByIdAndUpdate(userId, {
+            name,
+            phone,
+            address,
+            dob,
+            gender,
+            imageFile
+        })
+        return res.status(200).json({
+            success: true,
+            message: "User profile data updated successfully",
+        })
+        if(imageFile){
+            
+            const imageUpload=await cloudinary.uploader.upload(imageFile.path)
+            await userModel.findByIdAndUpdate(userId,{image:imageUpload.secure_url})
+        }
+        res.status(200).json({
+            success: true,
+            message: "User profile data updated successfully",
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            success: false,
+            message: `Error: ${error.message}`,
+        })
+    }
+}
+
+export { registerUser, loginUser, getProfile, updateProfile }
