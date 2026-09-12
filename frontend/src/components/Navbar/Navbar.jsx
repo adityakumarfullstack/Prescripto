@@ -17,7 +17,7 @@ const Navbar = () => {
     const [showMenu, setShowMenu] = useState(false);
     const [showProfileMenu, setShowProfileMenu] = useState(false);
 
-    const { token, setToken } = useContext(AppContext);
+    const { token, setToken, userData } = useContext(AppContext);
     const handleLogout = () => {
         localStorage.removeItem('token');
         setToken(false);
@@ -59,10 +59,10 @@ const Navbar = () => {
                     </div>
                     <div className="navbar-action flex items-center gap-2 md:gap-5">
                         {
-                            token ?
+                            token && userData ?
                                 <div className="flex items-center gap-3 cursor-pointer relative">
                                     <div className="profile-icon flex items-center gap-2" onClick={() => setShowProfileMenu((prev) => !prev)}>
-                                        <img className="w-10 h-10 rounded-full" src={assets.profile_pic} alt="profile picture" />
+                                        <img className="w-10 h-10 rounded-full" src={userData.image} alt="profile picture" />
                                         <img className="w-2.5 h-2.5" src={assets.dropdown_icon} alt="dropdown icon" />
                                     </div>
                                     {showProfileMenu && (

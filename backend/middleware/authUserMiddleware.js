@@ -2,33 +2,21 @@ import jwt from "jsonwebtoken";
 
 const authUser = async (req, res, next) => {
     try {
-   
+        const { token } = req.headers;
 
-        const { atoken } = req.headers;
-        //The reason we are recieving 'atoken' instead of 'aToken' is because The HTTP header names are case-insensitive, and Node.js/Express normalizes incoming request header names to lowercase.
-
-        // console.log("Received atoken:", atoken);
-
-        if (!atoken) {
-            // console.log("TOKEN NOT RECEIVED");
-
+        if (!token) {
             return res.status(401).json({
                 success: false,
                 message: "Please login first",
             });
         }
 
-        // console.log("TOKEN RECEIVED");
-
         const decoded_token = jwt.verify(
-            atoken,
+            token,
             process.env.JWT_SECRET
         );
 
-        // console.log(" JWT VERIFIED");
-        // console.log("Decoded token:", decoded_token);
-
-        req.body.userId=decoded_token.id
+        req.userId = decoded_token.id;
 
         next();
 

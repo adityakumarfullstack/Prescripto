@@ -115,63 +115,79 @@ const loginUser = async (req, res) => {
 }
 
 //API to get user profile data
-const getProfile= async(req,res)=>{
+const getProfile = async (req, res) => {
     try {
-        const {userId} = req.body
-        const userData = await UserModel.findById(userId).select("-password")
+        const { userId } = req;
+
+        const userData = await UserModel
+            .findById(userId)
+            .select("-password");
+
         return res.status(200).json({
             success: true,
             message: "User profile data fetched successfully",
-            userData
-        })
+            user: userData
+        });
+
     } catch (error) {
-        console.log(error)
+        console.log(error);
+
         return res.status(500).json({
             success: false,
             message: `Error: ${error.message}`,
-        })
+        });
     }
-}
+};
 
-//API to update user profile data
-const updateProfile= async(req,res)=>{
+// API to update user profile data
+const updateProfile = async (req, res) => {
     try {
-        const { userId, name, phone, address, dob, gender } = req.body
-        const imageFile=req.file
+        const { name, phone, address, dob, gender } = req.body;
+        const userId = req.userId;
+        const imageFile = req.file;
+
         if (!name || !phone || !address || !dob || !gender) {
             return res.status(400).json({
                 success: false,
                 message: "Data missing",
-            })
+            });
         }
-        await userModel.findByIdAndUpdate(userId, {
+
+        const updateData = {
             name,
             phone,
-            address,
+            address: JSON.parse(address),
             dob,
             gender,
-            imageFile
-        })
+        };
+
+        // Upload new profile image if provided
+        if (imageFile) {
+            const imageUpload = await cloudinary.uploader.upload(
+                imageFile.path
+            );
+
+            updateData.image = imageUpload.secure_url;
+        }
+
+        await UserModel.findByIdAndUpdate(
+            userId,
+            updateData
+        );
+
         return res.status(200).json({
             success: true,
             message: "User profile data updated successfully",
-        })
-        if(imageFile){
-            
-            const imageUpload=await cloudinary.uploader.upload(imageFile.path)
-            await userModel.findByIdAndUpdate(userId,{image:imageUpload.secure_url})
-        }
-        res.status(200).json({
-            success: true,
-            message: "User profile data updated successfully",
-        })
+        });
+
     } catch (error) {
-        console.log(error)
+        console.log(error);
+
         return res.status(500).json({
             success: false,
             message: `Error: ${error.message}`,
-        })
+        });
     }
-}
+};
 
 export { registerUser, loginUser, getProfile, updateProfile }
