@@ -52,6 +52,7 @@ const AppContextProvider = ({ children }) => {
 
     useEffect(() => {
         if (token) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             loadUserProfileData();
         } else {
             setUserData(false);
@@ -60,6 +61,7 @@ const AppContextProvider = ({ children }) => {
 
     const value = {
         doctors,
+        getAllDoctors,
         currSymbol,
         token,
         setToken,

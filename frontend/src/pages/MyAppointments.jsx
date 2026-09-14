@@ -1,8 +1,34 @@
 import { useContext } from "react"
 import { AppContext } from "../context/AppContext"
+import { useState } from "react"
+import axios from "axios"
+import { toast } from "react-toastify"
 
 const MyAppointments = () => {
-    const { doctors } = useContext(AppContext);
+    const { backendUrl, token } = useContext(AppContext);
+
+    const [appointments, setAppointments] = useState([]);
+
+    const getAppointments = async () => {
+        try {
+            const { data } = await axios.get(`${backendUrl}/api/user/get-my-appointments`, { headers: { token: token } });
+            if (data.success) {
+                setAppointments(data.appointments.reverse());
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+            console.log(error);
+        }
+    }
+
+    useState(() => {
+        if (token) {
+            getAppointments();
+        }
+    }, [token])
+
     return (
         <main className="my-appointments-page py-10 md:py-20">
             <section className="my-appointments-section">
@@ -12,17 +38,17 @@ const MyAppointments = () => {
                     </div>
                     <div className="my-appointments-wrapper flex flex-col gap-5">
                         {
-                            doctors.slice(0, 3).map((item, index) => (
+                            appointments.map((item, index) => (
                                 <div className="my-appointments-item mb-3 flex flex-col md:flex-row gap-3 text-center md:text-left md:gap-5 border border-gray-300 p-3 sm:p-5" key={index}>
                                     <div className="img-parent md:max-w-[250px]">
-                                        <img src={item.image} alt={item.name} className="bg-primary/10 w-full" />
+                                        <img src={item.doctorData.image} alt={item.doctorData.name} className="bg-primary/10 w-full" />
                                     </div>
                                     <div className="my-appointments-details flex-1">
-                                        <h4 className="name text-lg font-semibold">{item.name}</h4>
-                                        <p className="speciality text-sm">{item.speciality}</p>
+                                        <h4 className="name text-lg font-semibold">{item.doctorData.name}</h4>
+                                        <p className="speciality text-sm">{item.doctorData.speciality}</p>
                                         <h5 className="address-title font-medium text-md mt-3">Address</h5>
-                                        <p className="address text-sm">{item.address.line1}</p>
-                                        <p className="address text-sm">{item.address.line2}</p>
+                                        <p className="address text-sm">{item.doctorData.address.line1}</p>
+                                        <p className="address text-sm">{item.doctorData.address.line2}</p>
                                         <p className="mt-3"><span className="font-medium">Date & Time :</span>25 Jan 2023, 10:00 AM</p>
                                     </div>
                                     <div className="actions-parent flex flex-col gap-3">

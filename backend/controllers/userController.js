@@ -195,68 +195,121 @@ const updateProfile = async (req, rezs) => {
 //API to book an appointment
 const bookAppointment = async (req, res) => {
     try {
-        const { userId, doctorId, slotDate, slotTime } = req.body;
+        const { doctorId, slotDate, slotTime } = req.body;
 
-        const doctorData = await DoctorModel.findById(doctorId).select("-password");
+        const userId = req.userId;
 
-        if(!doctorData) {
+        // Get doctor data
+        const doctorData = await DoctorModel
+            .findById(doctorId)
+            .select("-password");
+
+        if (!doctorData) {
             return res.status(404).json({
                 success: false,
                 message: "Doctor not found",
-            })
+            });
         }
 
+        // Get user data
+        const userData = await UserModel
+            .findById(userId)
+            .select("-password");
+
+        if (!userData) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+
+        // Get booked slots
         let slots_booked = doctorData.slots_booked;
-        
-        //Check if slot is already booked
-        if(slots_booked[slotDate]) {
-            if(slots_booked[slotDate].includes(slotTime)) {
+
+        // Check if slot is already booked
+        if (slots_booked[slotDate]) {
+
+            if (slots_booked[slotDate].includes(slotTime)) {
                 return res.status(400).json({
                     success: false,
                     message: "Slot already booked",
-                })
-            } else {
-                slots_booked[slotDate].push(slotTime);
+                });
             }
-        } else {
-            slots_booked[slotDate] = [];
+
             slots_booked[slotDate].push(slotTime);
+
+        } else {
+            slots_booked[slotDate] = [slotTime];
         }
 
-        const userData = await UserModel.findById(userId).select("-password");
+        // Convert doctor document to plain object
+        const doctorDataObj = doctorData.toObject();
 
-        delete doctorData.slots_booked;
+        delete doctorDataObj.slots_booked;
 
+        // Appointment data
         const appointmentData = {
             userId,
             doctorId,
-            doctorData,
+            doctorData: doctorDataObj,
             userData,
-            amount: doctorData.fee,
+            amount: doctorData.fees,
             slotDate,
             slotTime,
-            date:Date.now(),
-        }
+            bookingDate: Date.now(),
+        };
 
-        const newAppointment = new AppointmentModel.create(appointmentData);
+        // Create appointment
+        const newAppointment = new AppointmentModel(
+            appointmentData
+        );
+
         await newAppointment.save();
 
-        //Save new slot in doctorData
-        await DoctorModel.findByIdAndUpdate(doctorId, {
-            slots_booked
-        })
+        // Update doctor's booked slots
+        await DoctorModel.findByIdAndUpdate(
+            doctorId,
+            { slots_booked }
+        );
 
         return res.status(200).json({
             success: true,
             message: "Appointment booked successfully",
-        })
+        });
+
     } catch (error) {
-        console.log(error)
+        console.log(error);
+
         return res.status(500).json({
             success: false,
             message: `Error: ${error.message}`,
-        })
+        });
     }
-}
+};
 
-export { registerUser, loginUser, getProfile, updateProfile, bookAppointment }
+//API to get all appointments of a user
+const getAllAppointments = async (req, res) => {
+    try {
+        const userId = req.userId;
+
+        const appointments = await AppointmentModel.find({
+            userId
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Appointments fetched successfully",
+            appointments,
+        });
+
+    } catch (error) {
+        console.log(error);
+
+        return res.status(500).json({
+            success: false,
+            message: `Error: ${error.message}`,
+        });
+    }
+};
+
+export { registerUser, loginUser, getProfile, updateProfile, bookAppointment, getAllAppointments }
