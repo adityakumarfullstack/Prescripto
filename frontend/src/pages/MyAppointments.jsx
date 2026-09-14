@@ -23,6 +23,18 @@ const MyAppointments = () => {
         }
     }
 
+    const formatAppointmentDate = (slotDate) => {
+        const [day, month, year] = slotDate.split("_");
+
+        const date = new Date(year, month - 1, day);
+
+        return date.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+        });
+    };
+
     useState(() => {
         if (token) {
             getAppointments();
@@ -49,7 +61,10 @@ const MyAppointments = () => {
                                         <h5 className="address-title font-medium text-md mt-3">Address</h5>
                                         <p className="address text-sm">{item.doctorData.address.line1}</p>
                                         <p className="address text-sm">{item.doctorData.address.line2}</p>
-                                        <p className="mt-3"><span className="font-medium">Date & Time :</span>25 Jan 2023, 10:00 AM</p>
+                                        <p className="mt-3">
+                                            <span className="font-medium">Date & Time : </span>
+                                            {formatAppointmentDate(item.slotDate)}, {item.slotTime}
+                                        </p>
                                     </div>
                                     <div className="actions-parent flex flex-col gap-3">
                                         <button className="btn-reschedule bg-primary text-white border border-primary py-2 px-4 hover:bg-primary/80 hover:shadow-md transition ease-in-out duration-400">Pay Online</button>
