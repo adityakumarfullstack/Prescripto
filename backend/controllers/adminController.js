@@ -2,7 +2,8 @@ import validator from "validator"
 import bcrypt from "bcrypt"
 import { v2 as cloudinary } from 'cloudinary'
 import DoctorModel from "../models/Doctor.js"
-import jwt from "jsonwebtoken" 
+import jwt from "jsonwebtoken"
+import AppointmentModel from "../models/Appointment.js"
 
 //API for Adding Doctors
 
@@ -102,9 +103,7 @@ const addDoctor = async (req, res) => {
     }
 };
 
-
 //API for Admin Login
-
 const loginAdmin=(req,res)=>{
     try {
         const {email,password}=req.body
@@ -147,4 +146,21 @@ const allDoctors=async(req,res)=>{
     }
 }
 
-export {addDoctor,loginAdmin,allDoctors}
+//API to get all appointments for admin
+const appointmentsAdmin=async(req,res)=>{
+    try {
+        const appointments=await AppointmentModel.find({}).select("-password") //select all fields except password
+        return res.status(200).json({
+            success: true,
+            message: "Appointments fetched successfully",
+            appointments,
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Error: ${error.message}`,
+        })
+    }
+}
+
+export {addDoctor, loginAdmin, allDoctors, appointmentsAdmin}
