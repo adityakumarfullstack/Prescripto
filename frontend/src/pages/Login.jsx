@@ -1,14 +1,55 @@
-import { useState } from "react"
+import { useContext } from "react";
+import { useState, useEffect } from "react"
+import { AppContext } from "../context/AppContext"
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+    const { backendUrl, token, setToken } = useContext(AppContext);
     const [formType, setFormType] = useState("Sign Up");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
 
+    const navigate = useNavigate();
+
     const handleFormSubmit = async (e) => {
         e.preventDefault();
+
+        try {
+            if (formType === "Sign Up") {
+                const { data } = await axios.post(`${backendUrl}/api/user/register`, { name, email, password });
+                if (data.success) {
+                    localStorage.setItem('token', data.token);
+                    setToken(data.token);
+                    // console.log(data.token);
+                } else {
+                    toast.error(data.message);
+                }
+            } else {
+                const { data } = await axios.post(`${backendUrl}/api/user/login`, { email, password });
+                if (data.success) {
+                    localStorage.setItem('token', data.token);
+                    setToken(data.token);
+                    // console.log(data.token);
+                } else {
+                    toast.error(data.message);
+                }
+            }
+        } catch (error) {
+            // console.log(error);
+            toast.error(
+                error.response?.data?.message || error.message
+            );
+        }
     }
+
+    useEffect(() => {
+        if (token) {
+            navigate("/");
+        }
+    }, [token])
 
     return (
         <main className="login-page py-10 md:py-20">

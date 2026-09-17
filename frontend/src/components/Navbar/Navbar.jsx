@@ -2,7 +2,8 @@ import './navbar.css'
 import { assets } from '../../assets/assets'
 import { Link, NavLink } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import { AppContext } from '../../context/AppContext'
 
 const Navbar = () => {
     const navLinkStyles = ({ isActive }) =>
@@ -14,8 +15,13 @@ const Navbar = () => {
     const navigate = useNavigate();
 
     const [showMenu, setShowMenu] = useState(false);
-    const [token, setToken] = useState(true);
     const [showProfileMenu, setShowProfileMenu] = useState(false);
+
+    const { token, setToken, userData } = useContext(AppContext);
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        setToken(false);
+    }
 
     return (
         <nav className="navbar py-4 border-b border-gray-400 text-sm">
@@ -53,10 +59,10 @@ const Navbar = () => {
                     </div>
                     <div className="navbar-action flex items-center gap-2 md:gap-5">
                         {
-                            token ?
+                            token && userData ?
                                 <div className="flex items-center gap-3 cursor-pointer relative">
                                     <div className="profile-icon flex items-center gap-2" onClick={() => setShowProfileMenu((prev) => !prev)}>
-                                        <img className="w-10 h-10 rounded-full" src={assets.profile_pic} alt="profile picture" />
+                                        <img className="w-10 h-10 rounded-full" src={userData.image} alt="profile picture" />
                                         <img className="w-2.5 h-2.5" src={assets.dropdown_icon} alt="dropdown icon" />
                                     </div>
                                     {showProfileMenu && (
@@ -73,7 +79,7 @@ const Navbar = () => {
                                                     </Link>
                                                 </li>
                                                 <li className="py-1">
-                                                    <button onClick={() => setToken(false)} className="hover:text-primary transition-all duration-300">Logout</button>
+                                                    <button onClick={handleLogout} className="hover:text-primary transition-all duration-300">Logout</button>
                                                 </li>
                                             </ul>
                                         </div>

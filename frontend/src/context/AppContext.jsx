@@ -10,11 +10,7 @@ const AppContextProvider = ({ children }) => {
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const [doctors, setDoctors] = useState([])
-
-    const value = {
-        doctors,
-        currSymbol,
-    }
+    const [userData, setUserData] = useState(false);
 
     const getAllDoctors = async () => {
         try {
@@ -35,6 +31,45 @@ const AppContextProvider = ({ children }) => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         getAllDoctors();
     }, [])
+
+    //UserLogin
+    const [token, setToken] = useState('')
+
+    const loadUserProfileData = async () => {
+        try {
+            const { data } = await axios.get(`${backendUrl}/api/user/get-profile`, { headers: { token: token } });
+            if (data.success) {
+                setUserData(data.user);
+                console.log(data.user);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        if (token) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            loadUserProfileData();
+        } else {
+            setUserData(false);
+        }
+    }, [token])
+
+    const value = {
+        doctors,
+        getAllDoctors,
+        currSymbol,
+        token,
+        setToken,
+        backendUrl,
+        userData,
+        setUserData,
+        loadUserProfileData
+    }
 
     return (
         <AppContext.Provider value={value}>

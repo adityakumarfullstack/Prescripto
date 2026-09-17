@@ -1,22 +1,63 @@
 import { useState } from "react";
 import { assets } from "../assets/assets";
+import { AppContext } from "../context/AppContext";
+import { useContext } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const MyProfile = () => {
-    const [userData, setUserData] = useState({
-        name: 'Edward Vincent',
-        image: assets.profile_pic,
-        email: 'example@gmail.com',
-        phone: '1234567890',
-        address: {
-            line1: '37th Cross, Richmond',
-            line2: 'Circle, Ring Road, London'
-        },
-        gender: 'male',
-        dob: '2000-01-01',
-    })
+    const { userData, setUserData, token, backendUrl, loadUserProfileData } = useContext(AppContext)
+    // const [userData, setUserData] = useState({
+    //     name: 'Edward Vincent',
+    //     image: assets.profile_pic,
+    //     email: 'example@gmail.com',
+    //     phone: '1234567890',
+    //     address: {
+    //         line1: '37th Cross, Richmond',
+    //         line2: 'Circle, Ring Road, London'
+    //     },
+    //     gender: 'male',
+    //     dob: '2000-01-01',
+    // })
     const [isEdit, setIsEdit] = useState(false)
+    const [image, setImage] = useState(false)
 
-    return (
+    const handleEditProfile = async () => {
+        setIsEdit(true)
+        try {
+            const formData = new FormData()
+            formData.append('name', userData.name)
+            formData.append('phone', userData.phone)
+            formData.append('address', JSON.stringify(userData.address))
+            formData.append('gender', userData.gender)
+            formData.append('dob', userData.dob)
+
+            if (image) {
+                formData.append('image', image)
+            }
+
+            const { data } = await axios.post(`${backendUrl}/api/user/update-profile`, formData, {
+                headers: {
+                    token: token
+                }
+            })
+
+            if (data.success) {
+                toast.success(data.message)
+                await loadUserProfileData()
+                setIsEdit(false)
+                setImage(false)
+            } else {
+                toast.error(data.message)
+            }
+
+        } catch (error) {
+            console.log(error)
+            toast.error(error.message)
+        }
+    }
+
+    return userData && (
         <main className="my-profile-page py-10 md:py-20">
             <section className="my-profile-section max-w-[600px] mx-auto">
                 <div className="container">
@@ -25,9 +66,21 @@ const MyProfile = () => {
                     </div>
                     <div className="my-profile flex flex-col md:flex-row gap-3">
                         <div className="my-profile-left md:w-1/2">
-                            <div className="img-parent">
-                                <img src={userData.image} alt="Profile Image" className="mx-auto" />
-                            </div>
+                            {
+                                isEdit ?
+                                    <label htmlFor="image">
+                                        <div className="img-parent cursor-pointer inline-block relative">
+                                            <img src={image ? URL.createObjectURL(image) : userData.image} alt="Profile Image" className="mx-auto rounded opacity-75" />
+                                            <img src={assets.upload_icon} alt="Profile Image" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                                        </div>
+                                        <input type="file" id="image" className="hidden" onChange={(e) => setImage(e.target.files[0])} />
+                                    </label>
+                                    :
+                                    <div className="img-parent">
+                                        <img src={userData.image} alt="Profile Image" className="mx-auto" />
+                                    </div>
+                            }
+
                         </div>
                         <div className="my-profile-right md:w-1/2">
                             <div className="my-profile-details text-[15px] text-center md:text-left">
@@ -101,7 +154,7 @@ const MyProfile = () => {
                     <div className="btn-parent mt-4 flex justify-center">
                         {
                             isEdit ?
-                                <button className="btn border border-primary text-primary bg-white py-2 px-6 rounded-full hover:bg-primary hover:text-white transition ease-in-out duration-300" onClick={() => setIsEdit(false)}>Save Changes</button>
+                                <button className="btn border border-primary text-primary bg-white py-2 px-6 rounded-full hover:bg-primary hover:text-white transition ease-in-out duration-300" onClick={handleEditProfile}>Save Changes</button>
                                 :
                                 <button className="btn border border-primary text-primary bg-white py-2 px-6 rounded-full hover:bg-primary hover:text-white transition ease-in-out duration-300" onClick={() => setIsEdit(true)}>Edit Profile</button>
                         }

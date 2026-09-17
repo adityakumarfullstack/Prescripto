@@ -3,62 +3,146 @@ import { useParams } from "react-router-dom"
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
 import RelatedDoctors from "../components/realtedDoctors/RelatedDoctors";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Appointment = () => {
     const { docId } = useParams();
-    const { doctors, currSymbol } = useContext(AppContext);
+    const { doctors, currSymbol, backendUrl, token, getAllDoctors } = useContext(AppContext);
     const [doctorInfo, setDoctorInfo] = useState(null);
     const [doctorSlots, setDoctorSlots] = useState([]);
     const [slotIndex, setSlotIndex] = useState(0);
     const [slotTime, setSlotTime] = useState('');
 
+    const navigate = useNavigate();
+
     const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 
-    const fetchDocInfo = async () => {
+    const fetchDocInfo = () => {
         const docInfo = doctors.find(doc => doc._id === docId)
         setDoctorInfo(docInfo);
         console.log(doctorInfo);
     }
 
-    const getAvailableSlots = async () => {
+    const getAvailableSlots = () => {
+
         setDoctorSlots([]);
-        let today = new Date();
+
+        const today = new Date();
+
+        const allSlots = [];
 
         for (let index = 0; index < 7; index++) {
-            let timeSlots = [];
 
-            //Getting Date
-            let currentDate = new Date(today);
-            currentDate.setDate(today.getDate() + index)
+            const timeSlots = [];
 
-            //Setting End Time
-            let endTime = new Date();
-            endTime.setDate(today.getDate() + index)
-            endTime.setHours(21, 0, 0, 0)
+            const currentDate = new Date(today);
+            currentDate.setDate(
+                today.getDate() + index
+            );
 
-            //Setting Hours
-            if (today.getDate() === currentDate.getDate()) {
-                currentDate.setHours(currentDate.getHours() > 10 ? currentDate.getHours + 1 : 10)
-                currentDate.setMinutes(currentDate.getMinutes() > 30 ? 30 : 0)
+            const endTime = new Date(currentDate);
+            endTime.setHours(21, 0, 0, 0);
+
+            if (index === 0) {
+
+                let currentHour = currentDate.getHours();
+                let currentMinutes = currentDate.getMinutes();
+
+                if (currentHour < 10) {
+
+                    currentDate.setHours(10, 0, 0, 0);
+
+                } else if (currentMinutes <= 30) {
+
+                    currentDate.setHours(
+                        currentHour,
+                        30,
+                        0,
+                        0
+                    );
+
+                } else {
+
+                    currentDate.setHours(
+                        currentHour + 1,
+                        0,
+                        0,
+                        0
+                    );
+                }
+
             } else {
-                currentDate.setHours(10)
-                currentDate.setMinutes(0)
+
+                currentDate.setHours(10, 0, 0, 0);
             }
 
             while (currentDate < endTime) {
-                let formattedTime = currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+
+                const formattedTime =
+                    currentDate.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    });
+
+                const day = currentDate.getDate();
+                const month = currentDate.getMonth() + 1;
+                const year = currentDate.getFullYear();
+
+                const slotDate =
+                    `${day}_${month}_${year}`;
+
+                const bookedSlots =
+                    doctorInfo?.slots_booked?.[slotDate] || [];
+
+                const isBooked = bookedSlots.includes(formattedTime);
 
                 timeSlots.push({
                     datetime: new Date(currentDate),
-                    time: formattedTime
-                })
+                    time: formattedTime,
+                    isBooked
+                });
 
-                //Increment of time by 30 minutes
-                currentDate.setMinutes(currentDate.getMinutes() + 30)
+                currentDate.setMinutes(
+                    currentDate.getMinutes() + 30
+                );
             }
 
-            setDoctorSlots(prev => ([...prev, timeSlots]))
+            allSlots.push(timeSlots);
+        }
+
+
+        console.log("Generated Slots:", allSlots);
+
+        setDoctorSlots(allSlots);
+    };
+
+    const bookAppointment = async () => {
+        if (!token) {
+            toast.warn("Please login to book an appointment");
+            return navigate('/login');
+        }
+
+        try {
+            const date = doctorSlots[slotIndex][0].datetime;
+            let day = date.getDate();
+            let month = date.getMonth() + 1;//Months start from 0 to 11 so we have to add 1
+            let year = date.getFullYear();
+
+            const slotDate = `${day}_${month}_${year}`;
+
+            const { data } = await axios.post(`${backendUrl}/api/user/book-appointment`, { doctorId: docId, slotDate, slotTime }, { headers: { token: token } });
+            if (data.success) {
+                toast.success(data.message);
+                getAllDoctors();
+                navigate('/my-appointments');
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
         }
     }
 
@@ -67,12 +151,13 @@ const Appointment = () => {
     }, [doctors, docId])
 
     useEffect(() => {
-        getAvailableSlots()
-    }, [doctorInfo])
+        if (doctorInfo) {
+            getAvailableSlots();
+        }
+    }, [doctorInfo]);
 
     useEffect(() => {
         console.log(doctorSlots);
-
     }, [doctorSlots])
 
 
@@ -124,21 +209,35 @@ const Appointment = () => {
                                         <div className="booking-slot-time-parent flex gap-3 flex-wrap mt-4">
                                             {
                                                 doctorSlots.length && doctorSlots[slotIndex].map((item, index) => (
-                                                    <div className={`px-5 py-1 rounded-full border border-gray-400 text-gray-500 cursor-pointer ${item.time === slotTime ? 'bg-primary border-primary text-white' : ''}`} onClick={() => setSlotTime(item.time)} key={index}>
-                                                        < p >
-                                                            {item.time}
-                                                        </p>
+                                                    <div
+                                                        className={`px-5 py-1 rounded-full border text-gray-500
+                                                            ${item.isBooked
+                                                                ? 'bg-gray-200 border-gray-300 text-gray-400 cursor-not-allowed'
+                                                                : 'border-gray-400 cursor-pointer hover:border-primary'
+                                                            }
+                                                            ${item.time === slotTime && !item.isBooked
+                                                                ? 'bg-primary border-primary text-white'
+                                                                : ''
+                                                            }`}
+                                                        onClick={() => {
+                                                            if (!item.isBooked) {
+                                                                setSlotTime(item.time);
+                                                            }
+                                                        }}
+                                                        key={index}
+                                                    >
+                                                        <p>{item.time}</p>
                                                     </div>
                                                 ))
                                             }
                                         </div>
                                         <div className="appointment-btn-parent mt-5">
-                                            <button className="bg-primary px-6 py-3 rounded-full border border-primary text-white hover:bg-white hover:text-primary transition duration-300 ease-in-out">Book an Appointment</button>
+                                            <button onClick={bookAppointment} className="bg-primary px-6 py-3 rounded-full border border-primary text-white hover:bg-white hover:text-primary transition duration-300 ease-in-out">Book an Appointment</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div className="related-doctors-wrapper">
+                            <div className="related-doctors-wrapper mb-10">
                                 <RelatedDoctors doctorId={docId} speciality={doctorInfo.speciality} />
                             </div>
                         </div >
