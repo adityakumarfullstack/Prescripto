@@ -4,6 +4,8 @@ import { v2 as cloudinary } from 'cloudinary'
 import DoctorModel from "../models/Doctor.js"
 import jwt from "jsonwebtoken"
 import AppointmentModel from "../models/Appointment.js"
+import UserModel from "../models/User.js"
+
 
 //API for Adding Doctors
 
@@ -163,7 +165,7 @@ const appointmentsAdmin=async(req,res)=>{
     }
 }
 
-//api to cancel an appointment
+//API to cancel an appointment
 const adminCancelAppointment = async (req, res) => {
     try {
         const { appointmentId } = req.body;
@@ -201,5 +203,32 @@ const adminCancelAppointment = async (req, res) => {
     }
 }
 
+//API to get dashboard stats for admin panel
+const dashboardStats=async(req,res)=>{
+    try {
+        const doctors=await DoctorModel.find({}).select("-password") //select all fields except password
+        const appointments=await AppointmentModel.find({}).select("-password") //select all fields except password
+        const users = await UserModel.find({}).select("-password") //select all fields except password
+        
+        const dashData={
+            totalDoctors: doctors.length,
+            totalAppointments: appointments.length,
+            totalPatients: users.length,
+            latestAppointments: appointments.reverse().slice(0, 5),
+        }
 
-export {addDoctor, loginAdmin, allDoctors, appointmentsAdmin,adminCancelAppointment}
+        return res.status(200).json({
+            success: true,
+            message: "Dashboard stats fetched successfully",
+            dashData,
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Error: ${error.message}`,
+        })
+    }
+}
+
+
+export {addDoctor, loginAdmin, allDoctors, appointmentsAdmin,adminCancelAppointment, dashboardStats}
