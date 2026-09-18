@@ -2,9 +2,11 @@ import { useContext, useState } from 'react'
 import { AdminContext } from '../context/AdminContext'
 import axios from 'axios'
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom'
 
 
 const Login = () => {
+    const navigate = useNavigate();
     const [state, setState] = useState('Admin');
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -19,7 +21,8 @@ const Login = () => {
                 if (data.success) {
                     localStorage.setItem('atoken', data.token);
                     setAToken(data.token);
-                    console.log(data.token);
+                    // console.log(data.token);
+                    navigate('/admin-dashboard');
                 } else {
                     toast.error(data.message);
                 }

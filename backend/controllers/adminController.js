@@ -2,7 +2,10 @@ import validator from "validator"
 import bcrypt from "bcrypt"
 import { v2 as cloudinary } from 'cloudinary'
 import DoctorModel from "../models/Doctor.js"
-import jwt from "jsonwebtoken" 
+import jwt from "jsonwebtoken"
+import AppointmentModel from "../models/Appointment.js"
+import UserModel from "../models/User.js"
+
 
 //API for Adding Doctors
 
@@ -102,9 +105,7 @@ const addDoctor = async (req, res) => {
     }
 };
 
-
 //API for Admin Login
-
 const loginAdmin=(req,res)=>{
     try {
         const {email,password}=req.body
@@ -147,4 +148,87 @@ const allDoctors=async(req,res)=>{
     }
 }
 
-export {addDoctor,loginAdmin,allDoctors}
+//API to get all appointments for admin
+const appointmentsAdmin=async(req,res)=>{
+    try {
+        const appointments=await AppointmentModel.find({}).select("-password") //select all fields except password
+        return res.status(200).json({
+            success: true,
+            message: "Appointments fetched successfully",
+            appointments,
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Error: ${error.message}`,
+        })
+    }
+}
+
+//API to cancel an appointment
+const adminCancelAppointment = async (req, res) => {
+    try {
+        const { appointmentId } = req.body;
+
+        const appointmentData = await AppointmentModel.findById(appointmentId);
+
+        await AppointmentModel.findByIdAndUpdate(appointmentId, { cancelled: true });
+        
+        // Update doctor's booked slots
+        const { doctorId, slotDate, slotTime } = appointmentData;
+
+        const doctorData = await DoctorModel
+            .findById(doctorId);
+        
+        let slots_booked = doctorData.slots_booked;
+
+        slots_booked[slotDate] = slots_booked[slotDate].filter(slot => slot !== slotTime);
+
+        await DoctorModel.findByIdAndUpdate(
+            doctorId,
+            { slots_booked }
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "Appointment cancelled successfully",
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success: false,
+            message: `Error: ${error.message}`,
+        });
+    }
+}
+
+//API to get dashboard stats for admin panel
+const dashboardStats=async(req,res)=>{
+    try {
+        const doctors=await DoctorModel.find({}).select("-password") //select all fields except password
+        const appointments=await AppointmentModel.find({}).select("-password") //select all fields except password
+        const users = await UserModel.find({}).select("-password") //select all fields except password
+        
+        const dashData={
+            totalDoctors: doctors.length,
+            totalAppointments: appointments.length,
+            totalPatients: users.length,
+            latestAppointments: appointments.reverse().slice(0, 5),
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Dashboard stats fetched successfully",
+            dashData,
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Error: ${error.message}`,
+        })
+    }
+}
+
+
+export {addDoctor, loginAdmin, allDoctors, appointmentsAdmin,adminCancelAppointment, dashboardStats}

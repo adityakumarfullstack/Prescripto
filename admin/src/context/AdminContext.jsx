@@ -7,6 +7,8 @@ export const AdminContext = createContext();
 const AdminContextProvider = ({ children }) => {
     const [aToken, setAToken] = useState(localStorage.getItem('atoken') || '');
     const [doctors, setDoctors] = useState([]);
+    const [allAppointments, setAllAppointments] = useState([]);
+    const [dashboardStats, setDashboardStats] = useState(false);
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL
     const getAllDoctors = async () => {
@@ -38,13 +40,61 @@ const AdminContextProvider = ({ children }) => {
         }
     }
 
+    const getAllAppointments = async () => {
+        try {
+            const { data } = await axios.get(`${backendUrl}/api/admin/all-appointments`, { headers: { atoken: aToken } });
+            if (data.success) {
+                setAllAppointments(data.appointments);
+                console.log(data.appointments);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+            // console.log(error);
+        }
+    }
+
+    const adminCancelAppointment = async (appointmentId) => {
+        try {
+            const { data } = await axios.post(`${backendUrl}/api/admin/cancel-appointment`, { appointmentId }, { headers: { atoken: aToken } });
+            if (data.success) {
+                toast.success(data.message);
+                getAllAppointments();
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+        }
+    }
+
+    const getDashboardStats = async () => {
+        try {
+            const { data } = await axios.get(`${backendUrl}/api/admin/dashboard-stats`, { headers: { atoken: aToken } });
+            if (data.success) {
+                setDashboardStats(data.dashData);
+                console.log(data.dashData);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+        }
+    }
+
     const value = {
         aToken,
         setAToken,
         backendUrl,
         doctors,
         getAllDoctors,
-        changeAvailability
+        changeAvailability,
+        allAppointments,
+        getAllAppointments,
+        adminCancelAppointment,
+        dashboardStats,
+        getDashboardStats
     };
 
     return <AdminContext.Provider value={value}>{children}</AdminContext.Provider>;
