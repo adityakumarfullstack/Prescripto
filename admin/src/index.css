@@ -16,6 +16,10 @@
     @apply bg-primary rounded-full;
 }
 
+html,
+body {
+    @apply overflow-x-hidden;
+}
 
 .container {
     @apply container mx-auto;
@@ -47,5 +51,13 @@
 
 th,
 td {
-    @apply py-2 px-4;
+    @apply py-2 px-4 whitespace-nowrap;
+}
+
+.all-appointments-wrapper::-webkit-scrollbar {
+    @apply h-1.5 bg-gray-300;
+}
+
+.all-appointments-wrapper::-webkit-scrollbar-thumb {
+    @apply bg-primary rounded-full;
 }
