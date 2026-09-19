@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { AppContext } from '../../context/AppContext';
 
 const DoctorAppointments = () => {
-    const { doctorToken, appointments, getAppointments } = useContext(DoctorContext);
+    const { doctorToken, appointments, getAppointments, completeAppointment, cancelAppointment } = useContext(DoctorContext);
     const { calculateAge, formatDate, currencySymbol } = useContext(AppContext);
 
     useEffect(() => {
@@ -48,7 +48,7 @@ const DoctorAppointments = () => {
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                {appointments.map((appointment, index) => (
+                                {appointments.reverse().map((appointment, index) => (
                                     <tr key={index} className="hover:bg-gray-50">
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="text-sm text-gray-900">{index + 1}</div>
@@ -75,19 +75,24 @@ const DoctorAppointments = () => {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="text-sm text-gray-900 flex items-center gap-2">
-                                                <button className='cursor-pointer text-green-600  text-xl bg-green-600/5 rounded-full h-8 w-8 flex items-center justify-center hover:bg-green-600/90 hover:text-white transition ease-in-out duration-200 mx-auto' onClick={() => adminCancelAppointment(item._id)}><span className='-mt-1'>&#x2713;</span></button>
-                                                <button className='cursor-pointer text-red-600  text-xl bg-red-600/5 rounded-full h-8 w-8 flex items-center justify-center hover:bg-red-600/90 hover:text-white transition ease-in-out duration-200 mx-auto' onClick={() => adminCancelAppointment(item._id)}><span className='-mt-1'>&times;</span></button>
+                                                {
+                                                    appointment.cancelled
+                                                        ? <p className='text-red-600 font-medium'>Cancelled</p>
+                                                        : appointment.isCompleted
+                                                            ? <p className='text-green-600 font-medium'>Completed</p> :
+                                                            <>
+                                                                <button className='cursor-pointer text-green-600  text-xl bg-green-600/5 rounded-full h-8 w-8 flex items-center justify-center border-1 border-green-600/30 hover:bg-green-600/20 hover:border-green-600-60 transition ease-in-out duration-300 mx-auto' onClick={() => completeAppointment(appointment._id)}><span className='-mt-1'>&#x2713;</span></button>
+                                                                <button className='cursor-pointer text-red-600  text-xl bg-red-600/5 rounded-full h-8 w-8 flex items-center justify-center border-1 border-red-600/30 hover:bg-red-600/20 hover:border-red-600/60 transition ease-in-out duration-300 mx-auto' onClick={() => cancelAppointment(appointment._id)}><span className='-mt-1'>&times;</span></button>
+                                                            </>
+                                                }
+
                                             </div>
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
-                        <pre>
-                            {
-                                JSON.stringify(appointments, null, 2)
-                            }
-                        </pre>
+
                     </div>
                 </div>
             </div>

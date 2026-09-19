@@ -10,7 +10,7 @@ doctorRouter.post('/login', loginDoctor)
 
 doctorRouter.get('/get-my-appointments', authDoctor, getDoctorAppointments)
 
-doctorRouter.post('/mark-completed', authDoctor, markCompleted)
+doctorRouter.post('/mark-complete', authDoctor, markCompleted)
 
 doctorRouter.post('/cancel-appointment', authDoctor, cancelAppointment)
 

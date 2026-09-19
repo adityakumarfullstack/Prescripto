@@ -114,7 +114,7 @@ const markCompleted = async (req, res) => {
             await AppointmentModel.findByIdAndUpdate(appointmentId, { isCompleted: true });
             return res.status(200).json({
                 success: true,
-                message: "Appointment marked as completed successfully",
+                message: "Appointment completed",
             });
         } else {
             return res.status(401).json({
@@ -140,7 +140,7 @@ const cancelAppointment = async (req, res) => {
             await AppointmentModel.findByIdAndUpdate(appointmentId, { cancelled: true });
             return res.status(200).json({
                 success: true,
-                message: "Appointment cancelled successfully",
+                message: "Appointment cancelled",
             });
         } else {
             return res.status(401).json({
