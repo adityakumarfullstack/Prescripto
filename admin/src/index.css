@@ -63,3 +63,12 @@ td {
 .appointments-list-table::-webkit-scrollbar-thumb {
     @apply bg-primary rounded-full;
 }
+
+.doctor-profile input {
+    @apply border border-gray-300 rounded py-1 px-2 text-gray-600 text-sm ml-1 w-auto focus:outline-none focus:border-primary hover:border-primary transition duration-200 ease-in-out placeholder:text-gray-400;
+}
+
+.doctor-profile input[type="number"]::-webkit-inner-spin-button,
+.doctor-profile input[type="number"]::-webkit-outer-spin-button {
+    @apply appearance-none;
+}

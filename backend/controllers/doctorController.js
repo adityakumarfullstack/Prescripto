@@ -156,4 +156,80 @@ const cancelAppointment = async (req, res) => {
     }
 };
 
-export {changeAvailability,doctorList, loginDoctor, getDoctorAppointments, markCompleted, cancelAppointment}
+//API to get dashboard data for doctor panel
+const getDoctorDashboardData = async (req, res) => {
+    try {
+        const {doctorId} = req
+        const appointments = await AppointmentModel.find({doctorId});
+        
+        let totalEarnings = 0;
+        appointments.map((appointment) => {
+            if (appointment.isCompleted || appointment.payment) {
+                totalEarnings += appointment.amount;
+            }
+        })
+
+        let patients = [];
+        appointments.map((appointment) => {
+            if (!patients.includes(appointment.userId)) {
+                patients.push(appointment.userId);
+            }
+        })
+
+        const dashData={
+            totalAppointments: appointments.length,
+            totalPatients: patients.length,
+            totalEarnings,
+            latestAppointments: appointments.reverse().slice(0, 5),
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Dashboard data fetched successfully",
+            dashData,
+        })
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Error: ${error.message}`,
+        });
+    }
+}
+
+//API to get doctor profile data
+const getDoctorProfile = async (req, res) => {
+    try {
+        const {doctorId} = req
+        const doctorData = await DoctorModel.findById(doctorId).select("-password")
+        return res.status(200).json({
+            success: true,
+            message: "Doctor profile data fetched successfully",
+            doctorData,
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Error: ${error.message}`,
+        });
+    }
+}
+
+//API to update doctor profile
+const updateDoctorProfile = async (req, res) => {
+    try {
+        const {doctorId} = req
+        const {availability, address, fees} = req.body
+        await DoctorModel.findByIdAndUpdate(doctorId, {availability, address, fees})
+        return res.status(200).json({
+            success: true,
+            message: "Doctor profile updated successfully",
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Error: ${error.message}`,
+        });
+    }
+}
+
+export {changeAvailability,doctorList, loginDoctor, getDoctorAppointments, markCompleted, cancelAppointment, getDoctorDashboardData, getDoctorProfile, updateDoctorProfile}

@@ -8,6 +8,9 @@ const DoctorContextProvider = ({ children }) => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const [doctorToken, setDoctorToken] = useState(localStorage.getItem('doctorToken') || '');
     const [appointments, setAppointments] = useState([]);
+    const [doctorDashData, setDoctorDashData] = useState(false);
+    const [profileData, setProfileData] = useState(false);
+
     const getAppointments = async () => {
         try {
             // console.log("doctorToken:", doctorToken);
@@ -65,6 +68,44 @@ const DoctorContextProvider = ({ children }) => {
         }
     }
 
+    const getDoctorDashboardData = async () => {
+        try {
+            const { data } = await axios.get(`${backendUrl}/api/doctor/dashboard-data`, {
+                headers: {
+                    doctortoken: doctorToken
+                }
+            });
+            if (data.success) {
+                setDoctorDashData(data.dashData);
+                console.log(data.dashData);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+            console.log(error);
+        }
+    }
+
+    const getProfileData = async () => {
+        try {
+            const { data } = await axios.get(`${backendUrl}/api/doctor/get-profile`, {
+                headers: {
+                    doctortoken: doctorToken
+                }
+            });
+            if (data.success) {
+                setProfileData(data.doctorData);
+                console.log(data.doctorData);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+            console.log(error);
+        }
+    }
+
     const value = {
         backendUrl,
         doctorToken,
@@ -73,7 +114,12 @@ const DoctorContextProvider = ({ children }) => {
         setAppointments,
         getAppointments,
         completeAppointment,
-        cancelAppointment
+        cancelAppointment,
+        getDoctorDashboardData,
+        doctorDashData,
+        getProfileData,
+        profileData,
+        setProfileData
     };
     return <DoctorContext.Provider value={value}>{children}</DoctorContext.Provider>;
 };
