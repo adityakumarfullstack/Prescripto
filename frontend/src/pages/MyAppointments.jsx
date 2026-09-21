@@ -131,22 +131,32 @@ const MyAppointments = () => {
                                         </p>
                                     </div>
                                     {
-                                        !item.cancelled ? (
-                                            <div className="actions-parent flex flex-col gap-3">
+                                        !item.isCompleted ?
+                                            <>
                                                 {
-                                                    item.payment ? (
-                                                        <button disabled className="btn-paid bg-green-600/10 text-green-600 border border-green-600 py-2 px-4">Paid</button>
+                                                    !item.cancelled ? (
+                                                        <div className="actions-parent flex flex-col gap-3">
+                                                            {
+                                                                item.payment ? (
+                                                                    <button disabled className="btn-paid bg-green-600/10 text-green-600 border border-green-600 py-2 px-4">Paid</button>
 
+                                                                ) : (
+                                                                    <button onClick={() => { appointmentRazorpay(item._id) }} className="btn-pay bg-primary text-white border border-primary py-2 px-4 hover:bg-primary/80 hover:shadow-md transition ease-in-out duration-400">Pay Online</button>
+                                                                )
+                                                            }
+                                                            <button onClick={() => { cancelAppointment(item._id) }} className="btn-cancel bg-white text-primary border border-primary py-2 px-4 hover:bg-red-600 hover:border-red-600 hover:text-white transition ease-in-out duration-400">Cancel Appointment</button>
+                                                        </div>
                                                     ) : (
-                                                        <button onClick={() => { appointmentRazorpay(item._id) }} className="btn-pay bg-primary text-white border border-primary py-2 px-4 hover:bg-primary/80 hover:shadow-md transition ease-in-out duration-400">Pay Online</button>
-                                                    )}
-                                                <button onClick={() => { cancelAppointment(item._id) }} className="btn-cancel bg-white text-primary border border-primary py-2 px-4 hover:bg-red-600 hover:border-red-600 hover:text-white transition ease-in-out duration-400">Cancel Appointment</button>
-                                            </div>
-                                        ) : (
+                                                        <div className="actions-parent flex flex-col gap-3">
+                                                            <button className="btn-reschedule bg-red-600 text-white border border-red-600 py-2 px-4 hover:bg-red-600/80 hover:shadow-md transition ease-in-out duration-400">Appointment Cancelled</button>
+                                                        </div>
+                                                    )
+                                                }
+                                            </>
+                                            :
                                             <div className="actions-parent flex flex-col gap-3">
-                                                <button className="btn-reschedule bg-red-600 text-white border border-red-600 py-2 px-4 hover:bg-red-600/80 hover:shadow-md transition ease-in-out duration-400">Appointment Cancelled</button>
+                                                <button disabled className="btn-paid bg-green-600/10 text-green-600 border border-green-600 py-2 px-4">Completed</button>
                                             </div>
-                                        )
                                     }
 
                                 </div>

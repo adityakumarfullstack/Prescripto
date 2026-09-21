@@ -20,7 +20,7 @@ const TopDoctors = () => {
                                 <img src={item.image} alt="top-doctors" />
                             </div>
                             <div className="availability mb-2">
-                                <p className="text-green-600 w-max mx-auto bg-green-600/10 px-3 rounded-full border border-green-600 flex items-center gap-1"><span className="w-2 h-2 inline-block rounded-full bg-green-500"></span> Available</p>
+                                <p className={`w-max mx-auto px-3 rounded-full border flex items-center gap-1 ${item.availability ? 'bg-green-600/10 border-green-600 text-green-600' : 'bg-red-600/10 border-red-600 text-red-600'}`}><span className={`w-2 h-2 inline-block rounded-full  ${item.availability ? 'bg-green-500' : 'bg-red-500'}`}></span> {item.availability ? 'Available' : 'Unavailable'}</p>
                             </div>
                             <div className="top-doctors-name mb-4">
                                 <h4 className="font-medium text-lg">{item.name}</h4>

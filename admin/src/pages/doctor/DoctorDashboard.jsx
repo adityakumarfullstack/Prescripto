@@ -67,12 +67,12 @@ const DoctorDashboard = () => {
                                         {
                                             item.cancelled
                                                 ? <p className='text-red-600 font-medium'>Cancelled</p>
-                                                : appointment.isCompleted
+                                                : item.isCompleted
                                                     ? <p className='text-green-600 font-medium'>Completed</p> :
-                                                    <>
+                                                    <div className='flex items-center flex-col md:flex-row gap-2'>
                                                         <button className='cursor-pointer text-green-600  text-xl bg-green-600/5 rounded-full h-8 w-8 flex items-center justify-center border-1 border-green-600/30 hover:bg-green-600/20 hover:border-green-600-60 transition ease-in-out duration-300 mx-auto' onClick={() => completeAppointment(appointment._id)}><span className='-mt-1'>&#x2713;</span></button>
                                                         <button className='cursor-pointer text-red-600  text-xl bg-red-600/5 rounded-full h-8 w-8 flex items-center justify-center border-1 border-red-600/30 hover:bg-red-600/20 hover:border-red-600/60 transition ease-in-out duration-300 mx-auto' onClick={() => cancelAppointment(appointment._id)}><span className='-mt-1'>&times;</span></button>
-                                                    </>
+                                                    </div>
                                         }
                                     </div>
                                 </div>

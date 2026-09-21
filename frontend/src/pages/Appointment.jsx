@@ -125,6 +125,16 @@ const Appointment = () => {
             return navigate('/login');
         }
 
+        if (!doctorInfo?.availability) {
+            toast.error("This doctor is currently unavailable");
+            return;
+        }
+
+        if (!slotTime) {
+            toast.warn("Please select a time slot");
+            return;
+        }
+
         try {
             const date = doctorSlots[slotIndex][0].datetime;
             let day = date.getDate();
