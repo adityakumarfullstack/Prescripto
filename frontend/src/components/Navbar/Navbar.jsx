@@ -86,7 +86,7 @@ const Navbar = () => {
                                     )}
                                 </div>
                                 :
-                                <button onClick={() => navigate('/login')} className="btn bg-primary text-white py-1.5 px-3 md:py-3 md:px-6 rounded-full md:font-semibold hover:bg-primary/90 transition-all duration-300">Create Account</button>
+                                <button onClick={() => navigate('/login')} className="btn bg-primary text-white py-1.5 px-3 md:py-3 md:px-6 rounded-full md:font-semibold hover:bg-primary/90 transition-all duration-300">Login</button>
                         }
                         <div className="menu-icon md:hidden">
                             <img src={assets.menu_icon} alt="open menu icon" onClick={() => setShowMenu(true)} className="w-5 h-5 sm:w-6 sm:h-6" />

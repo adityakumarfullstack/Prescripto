@@ -70,9 +70,12 @@ const Dashboard = () => {
                                                     {
                                                         item.cancelled ? (
                                                             <p className='text-red-600 font-medium'>Cancelled</p>
-                                                        ) : (
-                                                            <div className='cursor-pointer text-red-600  text-xl bg-red-600/5 rounded-full h-8 w-8 flex items-center justify-center hover:bg-red-600/90 hover:text-white transition ease-in-out duration-200 mx-auto' onClick={() => adminCancelAppointment(item._id)}><span className='-mt-1'>&times;</span></div>
+                                                        ) : item.isCompleted ? (
+                                                            <p className='text-green-600 font-medium'>Completed</p>
                                                         )
+                                                            : (
+                                                                <div className='cursor-pointer text-red-600  text-xl bg-red-600/5 rounded-full h-8 w-8 flex items-center justify-center hover:bg-red-600/90 hover:text-white transition ease-in-out duration-200 mx-auto' onClick={() => adminCancelAppointment(item._id)}><span className='-mt-1'>&times;</span></div>
+                                                            )
                                                     }
                                                 </div>
                                             </div>
