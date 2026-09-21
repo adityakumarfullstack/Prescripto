@@ -33,7 +33,9 @@ const AppContextProvider = ({ children }) => {
     }, [])
 
     //UserLogin
-    const [token, setToken] = useState('')
+    const [token, setToken] = useState(
+        localStorage.getItem("token") || ""
+    );
 
     const loadUserProfileData = async () => {
         try {

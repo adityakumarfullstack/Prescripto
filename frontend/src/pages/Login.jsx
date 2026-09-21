@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const { backendUrl, token, setToken } = useContext(AppContext);
-    const [formType, setFormType] = useState("Sign Up");
+    const [formType, setFormType] = useState("Login");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
